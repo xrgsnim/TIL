@@ -37,3 +37,5 @@ model.add_constraint(x2 >= 0)
 model.print_information()
 sol_model = model.solve()
 model.print_solution()
+
+# 안녕
