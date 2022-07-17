@@ -16,6 +16,7 @@ class LinearRegressionGD(object):
         self._new_X = None
         self._w_history = None
         self._weight_decay = weight_decay
+        self._theta = None
 
     def cost(self, h, y):
         return (1/(2*len(y)))*np.sum((h-y)**2)
@@ -24,8 +25,8 @@ class LinearRegressionGD(object):
         return X.dot(theta)
 
     def gradient(self, X, y, theta):
-        theta = np.random.normal((2,1))
-        return (self._eta0/(len(y)))*np.sum(np.dot(X, theta) - y)*X
+        return (1/len(y)) * (X.dot(theta) - y).dot(X)
+
 
 
     def fit(self, X, y):
@@ -33,35 +34,38 @@ class LinearRegressionGD(object):
         if self.fit_intercept ==True:
             new_X = np.concatenate((np.ones((len(X), 1)), X), axis=1)
             self._new_X = new_X
-
-
  
-            theta = np.random.normal((2,1))
-            self._coef = theta[0]
-            self._intercept = theta[1]
-            self._w_history = [theta]
+        theta = np.ones(self._new_X.shape[1])
+        self._coef = theta[1:]
+        self._intercept = theta[0]
+        self._w_history = [theta]
             
-            for epoch in range(self._epochs):
-                # 아래 코드를 반드시 활용할 것
-                gradient = self.gradient(self._new_X, y, theta).flatten()
-                theta = np.array([gradient[0], gradient[1]])
-                self._coef = theta[1]
-                self._intercept = theta[0]
-                    
-                if epoch % 100 == 0:
-                    self._w_history.append(theta)
-                    cost = self.cost(
-                        self.hypothesis_function(self._new_X, theta), y)
-                    self._cost_history.append(cost)
-                self._eta0 = self._eta0 * self._weight_decay
+        for epoch in range(self._epochs):
+            # 아래 코드를 반드시 활용할 것
+            gradient = self.gradient(self._new_X, y, theta).flatten()
+            
+            theta = theta - self._eta0*gradient
 
-        # else:
+                
+            if epoch % 100 == 0:
+                self._w_history.append(theta)
+                cost = self.cost(
+                    self.hypothesis_function(self._new_X, theta), y)
+                self._cost_history.append(cost)
+            self._eta0 = self._eta0 * self._weight_decay
+            
+        self._coef = theta[1:]
+        self._intercept = theta[0]
+        self._theta = theta
 
-
-        return theta, self._w_history, self._cost_history
+        return self
 
     def predict(self, X):
-        pass
+        if self.fit_intercept == True:
+            X = np.concatenate((np.ones((len(X), 1)), X), axis=1)
+            
+        y_hat = np.dot(X, self._theta)
+        return y_hat
 
 
     @property
