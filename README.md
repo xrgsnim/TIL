@@ -15,6 +15,8 @@
   - [Time Series](https://github.com/xrgsnim/TIL/tree/main/ML/4_timeseries)
   - [Data Preprocessing](https://github.com/xrgsnim/TIL/tree/main/ML/5_data_preprocessing)
   - [Linear Regression](https://github.com/xrgsnim/TIL/tree/main/ML/6_linear_regression)
+  - [Logistic Regression](https://github.com/xrgsnim/TIL/tree/main/ML/7_logistic_regression)
+  - [Naive Bayes](https://github.com/xrgsnim/TIL/tree/main/ML/8_NB)
 
 * [Algorithm](https://github.com/xrgsnim/TIL/tree/main/Algorithm)
 
