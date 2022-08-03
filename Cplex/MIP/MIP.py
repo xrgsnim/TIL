@@ -21,7 +21,7 @@ b = {j: random.randint(0,30) for j in set_J}
 
 opt_model = cpx.Model(name="MIP Model")
 
-# if x is Continuous
+# if x is Continuousd
 x_vars = {(i,j): opt_model.continuous_var(lb=l[i,j], ub= u[i,j],
                                  name="x_{0}_{1}".format(i,j))
 for i in set_I for j in set_J}
