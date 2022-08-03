@@ -29,7 +29,7 @@ x_vars  = {(i,j): opt_model.continuous_var(lb=l[i,j], ub= u[i,j],
                                  name="x_{0}_{1}".format(i,j))
 for i in set_I for j in set_J}
 
-# if x is Binary
+# if x is Binarys
 #x_vars  = {(i,j): opt_model.binary_var(name="x_{0}_{1}".format(i,j))
 #for i in set_I for j in set_J}
 #
