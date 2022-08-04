@@ -5,18 +5,6 @@ import json
 from docplex.util.environment import get_environment
 from docplex.mp.model import Model
 
-# class LP:
-#     def __init__(self, model, values, constraints):
-#         model = Model(name = '', log_output=True)
-#         self.values = values
-#         self.constraints = constraints
-# 
-#     def add_value(self, value):
-#         value = model.continuous_var(name='value')
-
-
-
-
 
 model = Model(name='LP_example', log_output=True)
 
@@ -38,4 +26,4 @@ model.print_information()
 sol_model = model.solve()
 model.print_solution()
 
-# 안녕
+# how are you??
