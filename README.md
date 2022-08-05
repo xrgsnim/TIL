@@ -17,6 +17,8 @@
   - [Linear Regression](https://github.com/xrgsnim/TIL/tree/main/ML/6_linear_regression)
   - [Logistic Regression](https://github.com/xrgsnim/TIL/tree/main/ML/7_logistic_regression)
   - [Naive Bayes](https://github.com/xrgsnim/TIL/tree/main/ML/8_NB)
+  - [Decision Tree](https://github.com/xrgsnim/TIL/tree/main/ML/9_Decision_Tree)
+
 
 * [Algorithm](https://github.com/xrgsnim/TIL/tree/main/Algorithm)
 
