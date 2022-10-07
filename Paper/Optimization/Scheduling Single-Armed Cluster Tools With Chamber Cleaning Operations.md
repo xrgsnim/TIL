@@ -8,6 +8,7 @@ ___
 - parallel chamber를 위한 partial loading을 하는 backward($z$) sequence를 제안할 것
 - **vector $z$** : 각 process step $i$에서 몇 개의 챔버 $z_i$를 청소하기 위해 비워두었는가?
 - 목적 : optimal vector $z$를 찾자.
+
 <br><br><br>
 
 #### **[ 1. INTRODUCTION ]**
@@ -28,6 +29,7 @@ ___
 - 주어진 실험환경에서 partial loading $z$가 툴의 싸이클타임을 상당히 줄이는 것을 보여주겠다.
 - 사이클 시간이 퍼지 작업을 위해 병렬 챔버를 예약하는 방법에 따라 크게 달라진다고 결론짓는다.
 - 과도한 툴의 유휴시간은 웨이퍼 퀄리티 관점에서 안좋다.
+
 <br><br><br>
 
 #### **[ 2. WORKLOAD ANALYSIS OF SINGLE-ARMED CLUSTER TOOLS WITH PURGE OPERATIONS ]**
@@ -56,11 +58,13 @@ ___
 - 따라서, purge operation이 고려된 챔버의 workload : $\frac{1}{m_i} \{p_i + 2w + max(2w + 3v, c_i)\}$
 - **maximum workload(tool workload) : $\psi \equiv max[max_{i=1, \cdots, n} (1 / m_i) \{p_i + 2w + max(2w + 3c, c_i)\}, (n+1)(2w+2v)]$**
 - 의미 정확히 알아내야됨
+
 <br><br><br>
 
 #### **[ 3. EXTENDED BACKWARD SEQUENCE ]**
 - 일반적인 single-armed tool의 backward sequence : process step n의 챔버에서 unload하여 loadlock에 놓고 그 이전 스텝도 쭉쭉쭉
-- full work cycle(또는 LCM cycle) : step 1에서 step n까지 그 process step의 병령 챔버의 최소공배수 만큼 웨이퍼 흐름을 반복하는것
+- full work cycle(full tool cycle)(또는 LCM cycle) : step 1에서 step n까지 그 process step의 병렬 챔버의 최소공배수 만큼 웨이퍼 흐름을 반복하는것
+- 예시) process step = 3이라면, LCM : $m_1 \times m_2 \times m_3$
 - $C_{i, j}$ : process step $i$의 $j$번째 병렬챔버
 - 일반적인 backward sequence with full loading은 cleaning time에 비례해서 robot delay시간이 길어진다.
 - 예시) process step i에서 웨이퍼를 unload한 로봇은 $C_{i+1}$ (process step i+1의 cleaning time)동안 기다려야한다.
@@ -69,10 +73,42 @@ ___
 - cleaning 그 자체는 챔버와 로봇간에 행해져야하는 또다른 job이다 !!
 - **EXTENDED BACKWARD SEQUENCE = $backward sequence with partial loading$**
 
-<br>
+<br><br>
 
-**A. $Backward(z) Sequence$**
-- $z_i$ : process step $i$의 빈 parallel chamber들 수
+**A. Backward($z$) Sequence**
+- $z_i$ : process step $i$의 **빈** parallel chamber들 수
 - $m_i - z_i$ : 공정 진행중인 parallel chamber들 수
 - $backward(z)$ : partial loading이 있는 backward sequence $z = [z_1, \cdots, z_n]$
+- 데드락이 일어나지 않기 위해서 모든 $i = 1, 2, \cdots, n$에서 $z_i \le m_i - 1$를 유지해야한다.
+- $z_i > m_i - 1$이라면, 단계 i에서 언로드할 웨이퍼가 없기 때문에 backward sequence를 적용할 수 없다.??
+- 이제, 각 프로세스 단계의 병렬 챔버가 사용되는 순서를 결정해보자
+- 로봇은 각 프로세스 단계의 병렬 챔버에서 요청이 이루어진 순서대로 요청을 load 또는 unload한다. first-comefirst-served (FCFS) 이것은 cyclic한 order를 만든다.
+- 이것은 cyclic한 order를 만든다. process times, cleaning times, 그리고 robot task times는 모두 deterministic하기 때문이다.
+- 결론적으로, **backward($z$)는 적절한 $z$값을 수용하여 공정단계 간의 작업량 균형을 맞출수 있습니다**. (작업량 : 웨이퍼 process 뿐만 아니라 챔버 cleaning도 고려)
+- $u_{i,j}$ : 챔버 $C_{i,j}$의 unloading task ($u_i$ : 챔버 $C_i$의 ~)
+- $l_{i,j}$ : 챔버 $C_{i,j}$의 loading task ($l_i$ : 챔버 $C_i$의 ~)
+<br><br>
+![Image](https://ifh.cc/g/L3mFFD.jpg)
+- 위 Fig에서의 robot task sequence : $u_{3,2} \rightarrow l_4 \rightarrow u_{2,3} \rightarrow l_{3,1} \rightarrow u_1 \rightarrow l_{2,1} \rightarrow u_0 \rightarrow l_1$
+- $u_0, l_{n+1}$ : 로드락에서(로)의 unloading, loading
+- 위 그림에서는 full tool cycle이 6번 반큼 비슷한 task를 수행한다($m_1 \times m_2 \times m_3 = 6$), 비슷하다는 말은, 같은 cycle이지만 다른 챔버를 이용해서([1,1,1], [1,1,2], [1,2,1] ... [1,3,2] : 6개)
 
+<br><br>
+
+**B. Timed Event Graph Model for a Tool With Backward(z)**
+- TEG : 각 place에서 오직 하나의 input과 output transition을 가지는 TPN의 일종
+- 그래서 conflict place가 없으니 의사결정할 일이 없음, 툴은 똑같은 work cycle을 반복할 뿐
+
+- $\mathcal{G}$ = ($P, T, I, P, M_0, H$)인 6개의 튜플로 구성
+    - P = {$p_1, p_2, \cdots, p_m$}인 유한한 place들의 집합
+    - T = {$t_1, t_2, \cdots, t_n$}인 유한한 transition들의 집합, &nbsp;$P \cup T \ne  \varnothing $, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$P \cap T =  \varnothing $
+    - $I:(P \times T) \rightarrow \mathbb{N}$, place에서 transition으로 가는 input function
+    - $O:(T \times P) \rightarrow \mathbb{N}$, transition에서 place로 가는 output function
+    - $M_0 : P \rightarrow \mathbb{N}$, initial marking, 초기의 petri net상태
+    - $H : P \rightarrow \mathbb{R}^+ $, 특정 place에서의 deterministic한 token holding time 또는 특정 transition에서의 time delay들
+
+- backward($z$)인 TEG를 모델링 해보자
+- $T \equiv \{ t_1, \cdots, t_{2(n+1)} \}$ : robot task의 시작 혹은 완료, 챔버로의 loading, unloading같은
+- $P_r \equiv \{ p_1^r, \cdots, p_{2(n+1)}^r \}$ : robot moving을 나타내는 place
+- $P_c \equiv \{ p_1^c, \cdots, p_{2(n+1)}^c \}$ : cleaning operation을 나타내는 place
+- $P_p \equiv \{ p_1^p, \cdots, p_{2(n+1)}^p \}$ : wafer processing을 나타내는 place
