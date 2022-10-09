@@ -111,4 +111,21 @@ ___
 - $T \equiv \{ t_1, \cdots, t_{2(n+1)} \}$ : robot task의 시작 혹은 완료, 챔버로의 loading, unloading같은
 - $P_r \equiv \{ p_1^r, \cdots, p_{2(n+1)}^r \}$ : robot moving을 나타내는 place
 - $P_c \equiv \{ p_1^c, \cdots, p_{2(n+1)}^c \}$ : cleaning operation을 나타내는 place
+    - $p_i^c : 청소중인 or 비어있는(??) 챔버 수
 - $P_p \equiv \{ p_1^p, \cdots, p_{2(n+1)}^p \}$ : wafer processing을 나타내는 place
+    - $p_i^p$ : 웨이퍼를 가공중인 챔버 수
+- $p_i^p + p_i^c = m_i$
+- **Token Holding Time**
+    - : $P_r : v$
+    - : $p_i^p$ : 공정 i에서의 processing time
+    - : $p_i^c$ : 공정 i에서의 cleaning time
+<br><br>
+- $\tau_p$ : place $p$에서의 토큰 수
+
+<br><br>
+
+**C . Tool Cycle Time for Backward($z$)**
+- circuit ratio : $R_i$로 표기
+> ## $\frac{place들의\;token\;holding\;time들\;+\;transition들의\;firing\;delay들}{circuit\;전체의\;토큰\;수}$
+
+- $R_1 = (n + 1)(2v + 2w)$ : robot work cycle의 circuit ratio
