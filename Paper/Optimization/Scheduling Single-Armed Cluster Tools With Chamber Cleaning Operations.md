@@ -95,7 +95,7 @@ ___
 
 <br><br>
 
-**B. Timed Event Graph Model for a Tool With Backward(z)**
+<span style='background-color:#fff5b1'> **B. Timed Event Graph Model for a Tool With Backward(z)** </span>
 - TEG : 각 place에서 오직 하나의 input과 output transition을 가지는 TPN의 일종
 - 그래서 conflict place가 없으니 의사결정할 일이 없음, 툴은 똑같은 work cycle을 반복할 뿐
 
@@ -115,17 +115,59 @@ ___
 - $P_p \equiv \{ p_1^p, \cdots, p_{2(n+1)}^p \}$ : wafer processing을 나타내는 place
     - $p_i^p$ : 웨이퍼를 가공중인 챔버 수
 - $p_i^p + p_i^c = m_i$
+<br><br>
+![Image](https://ifh.cc/g/XhWhn1.png)
+<br><br>
 - **Token Holding Time**
     - : $P_r : v$
     - : $p_i^p$ : 공정 i에서의 processing time
     - : $p_i^c$ : 공정 i에서의 cleaning time
 <br><br>
+
 - $\tau_p$ : place $p$에서의 토큰 수
+
+- (3) : $\sum_{p\in P_r} \tau_p = 1$ : 모든 place에서의 토큰수는 1개, sigle-arm 의미
+- (4) : $\tau_{p_i^p} + \tau_{p_i^c} = m_i$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $\forall i = 1, \cdots, n$ : 각 스텝 i에서의 processing place와 cleaning place의 토큰의 수의 합은 그 스텝 i에서의 모든 챔버의 수($m_i$)와 같다.
+- (5) : $\tau_{p_{n-i+1}^p} + \tau_{p_{2i-1}^r} + \tau_{p_{2i}^r} + \tau_{p_{2i + 1}^r}$ = $m_{n - i + 1} - z_{n - i + 1}$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $\forall i = 1, \cdots, n$ : 우항 먼저보면, 특정 스텝 n-i+1에서 모든 병렬챔버의 수 - 빈 챔버의 수 = ??
 
 <br><br>
 
-**C . Tool Cycle Time for Backward($z$)**
-- circuit ratio : $R_i$로 표기
-> ## $\frac{place들의\;token\;holding\;time들\;+\;transition들의\;firing\;delay들}{circuit\;전체의\;토큰\;수}$
+<span style='background-color:#fff5b1'> **C . Tool Cycle Time for Backward($z$)** <\span>
 
-- $R_1 = (n + 1)(2v + 2w)$ : robot work cycle의 circuit ratio
+- **circuit ratio** : $R_i$로 표기, 각 리소스(로봇, 챔버)들의 입장에서 한 cycle을 도는데의 소요시간, not 비율
+
+> ## $\frac{place들의\;token\;holding\;time들\;+\;transition들의\;firing\;delay들}{해당\; circuit\;전체의\;토큰\;수}$
+<br><br>
+
+![Image](https://ifh.cc/g/2SaHw4.png)
+- (6) : $R_1 = (n + 1)(2v + 2w)$ : robot work cycle의 circuit ratio
+
+<br>
+
+![Image](https://ifh.cc/g/8QbWA4.png)
+
+- (7) : $R_2 (i) = \frac{1}{m_i} (p_i + c_i + 2w)$ : 챔버 상 에서 cleaning과 processing간의 스위칭
+<br><br><br>
+
+![Image](https://ifh.cc/g/DWj2gb.png)
+
+- (8) : $R_3 (i) = \frac{1}{m_i - z_i} (p_i + 3v + 4w)$ : 한 챔버에서의 processing과정, 완료된 웨이퍼 unload, 새 웨이퍼 load
+
+
+
+- (9) : $R_4(A) = \frac{1}{1 + \sum_{i \in A^{Z_i}}} \times \{ (n + 1 - 2|A| )( 2v + 2w ) + \sum_{i \in A} (2w + v + c_i)\}$ : robot task와 cleaning operation간의 연결, 어떤 클리닝, 몇 개의 클리닝과 연결되는지에 따라 여러 조합의 경우의 수 나옴
+- **A : roboy task와 이을수있는, 인접하지 않은 cleaning(process도 ??) place들의 subset**
+- **S : roboy task와 이을 수 있는 모든 후보 cleaning(process도??) place들**
+- 어느 process step $i$에서 $z_i$가 증가하면, circuit ratio $R_3(i)$는 증가하고, $S$에 있는 어느$A$든지 다 $R_4(A)$가 감소한다.
+- 그말은 즉, $z_i$에 적절히 웨이퍼를 loading하면 processing과 cleaning 챔버 간의 workload를 균형맞출수 있다.
+- $Theorem 2$ : $max[R_1,\quad max_{\forall i=1, \cdots, n} R_2 (i), \quad max_{\forall i = 1, \cdots, n} R_3 (i), \quad max_{\forall A \in S} R_4 (A)]$
+- : backward($z$)로 동작하는 series-parallel 챔버들의 single-armed cluster tool의 cycle time
+
+<br><br>
+
+-**D. Optimality of Backward($z$)**
+- backward($z$)의 cycle time은 loading $z$에 의해 정해진다.
+- 그래서 tool configuration, proccess time, robot task time등과 같은 파라미터들이 주어진 문제상황에서 우리는 **optimal loading z**를 먼저 정해야한다.
+- **그리고나서 cycle time( $\lambda_{backward(z∗)}$ )을 다른 모든 가능한 시퀀스들의 cycle time과 비교한다.**
+- 그랬을 때도 해당 cycle time이 제일 작으면 그것이 **$global \; optimal$**
+
